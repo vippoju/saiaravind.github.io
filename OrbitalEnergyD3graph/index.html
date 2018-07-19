@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<head>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" />
+  <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" />
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.8/d3.min.js" charset="utf-8"></script>
+  <link rel="stylesheet" href="nv.d3.css">
+  <style>
+    text {
+      font: 12px sans-serif;
+    }
+    
+    svg {
+      display: block;
+    }
+    
+    html,
+    body,
+    #oechart,
+    svg {
+      margin: 0px;
+      padding: 0px;
+      height: 100%;
+      width: 100%;
+    }
+    
+    #charttitle {
+      text-align: center;
+      padding: 1px;
+      margin: 1px;
+      font-size: 30px;
+      color: grey;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="row" id="body-row">
+    <!-- Sidebar -->
+    <div id="sidebar-container" class="sidebar-expanded d-none d-md-block">
+      <!-- d-* hiddens the Sidebar in smaller devices. Its itens can be kept on the Navbar 'Menu' -->
+      <!-- Bootstrap List Group -->
+      <ul class="list-group">
+        <!-- Separator with title -->
+        <li class="list-group-item sidebar-separator-title  d-flex align-items-center menu-collapsed">
+          <medium>GRAPHICAL DISPLAY OPTIONS </medium>
+        </li>
+        <!-- /END Separator -->
+        <!-- Menu with submenu -->
+        <a href="#submenu1" data-toggle="collapse" aria-expanded="false" class=" list-group-item list-group-item-action flex-column align-items-start">
+          <div class="d-flex w-100 justify-content-start align-items-center">
+            <span class="fa fa-tasks fa-fw mr-3"></span>
+            <span class="menu-collapsed">Graph Properties</span>
+            <span class="submenu-icon ml-auto"></span>
+          </div>
+        </a>
+        <!-- Submenu content -->
+        <div id="submenu1">
+          <div class="container m-3">
+            <div class="row justify-content-md-center px-4 my-3">
+              <div class="col-md-7 "> Select Units
+              </div>
+              <div class="col-md-5" id="unitdiv">
+                <select class="form-control form-control-sm" id="oeunit">
+                  <option value="1">kJ/mol</option>
+                  <option value="2">kcal/mol</option>
+                  <option value="3">eV</option>
+                  <option value="4">Hartree</option>
+                </select>
+              </div>
+            </div>
+            <hr>
+            <div class="row justify-content-md-center px-4 my-3">
+              <div class="col-md-7"> Select Type
+              </div>
+              <div class="col-md-5" id="typediv">
+                <select class="form-control form-control-sm" id="oetype">
+                  <option value="1">Relative</option>
+                  <option value="2">Absolute</option>
+                </select>
+              </div>
+            </div>
+            <!--/row-->
+          </div>
+          <!--container-->
+        </div>
+
+        <a href="#submenu2" data-toggle="collapse" aria-expanded="false" class=" list-group-item list-group-item-action flex-column align-items-start">
+          <div class="d-flex w-100 justify-content-start align-items-center">
+            <span class="fa fa-dot-circle-o fa-fw mr-3"></span>
+            <span class="menu-collapsed">Orbitals Selection</span>
+            <span class="submenu-icon ml-auto"></span>
+          </div>
+        </a>
+        <!-- Submenu content -->
+        <div id="submenu2">
+          <div class="container m-3">
+            <div class="row justify-content-md-left px-4 my-3">
+              <div class="col-md-6 px-3">
+                <div id="checkboxesleft">
+                </div>
+              </div>
+              <div class="col-md-6 px-3">
+                <div id="checkboxesright">
+                </div>
+              </div>
+            </div>
+            <!--/row-->
+          </div>
+          <!--container-->
+        </div>
+
+        <!-- /END Separator -->
+        <a href="#" data-toggle="sidebar-colapse" class=" list-group-item list-group-item-action d-flex align-items-center">
+          <div class="d-flex w-100 justify-content-start align-items-center">
+            <span id="collapse-icon" class="fa fa-2x mr-3"></span>
+            <span id="collapse-text" class="menu-collapsed">Collapse</span>
+          </div>
+        </a>
+
+      </ul>
+      <!-- List Group END-->
+    </div>
+    <!-- sidebar-container END -->
+
+    <!-- MAIN -->
+    <div class="col">
+
+      <div class="row">
+        <div class="col-md-9 offset-md-1">
+          <div class="heading ">
+            <h2>
+            Orbital Energies
+        </h2>
+          </div>
+        </div>     
+        
+      </div>
+
+      <div class="row">
+        <div class="mappingcontent col-md-12">
+          <div id="oechart" class='with-transitions'>
+            <svg></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- Main Col END -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+  <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+  <script src="script.js"></script>
+  <script src="d3-selection-multi.v1.js"></script>
+  <script src="svgexport.js"></script>
+  <script src="svgexportlib.js"></script>
+  <script src="jspdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.6/nv.d3.min.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      d3.json("data.json", function(error, data) {
+        var fitScreen = false;
+        var width = 1000;
+        var height = 800;
+        var positionX = 900;
+        var chart;
+
+        var verticalOffset = 25;
+        var minOEnergy;
+        var maxOEnergy;
+        var selectedunits = 1;
+        var type = 1;
+        var selectedOrbitalList = [];
+        var guidelineEnabled = false;
+
+        selectedOrbitalList.push("Orbital-" + data.filledCount);
+        selectedOrbitalList.push("Orbital-" + (parseInt(data.filledCount) + 1));
+
+        var oeDataKj = data.orbitalEnergies;
+        var oeDataKcal = createOrbitalEnergyData(oeDataKj, 0.24);
+        var oeDataeV = createOrbitalEnergyData(oeDataKj, 0.01);
+        var oeDataHartree = createOrbitalEnergyData(oeDataKj, 0.00038);
+
+        //setting the default unit as Kj/mol with relative
+        var orbitalEnergyData = createRelativeOrbitalData(oeDataKj);
+        var fillteredOrbitalEnergyData = filterbySelectedOrbitalList(orbitalEnergyData);
+
+        $(document).on('change', '#oeunit', function() {
+          selectedunits = $('#oeunit').val();
+          orbitalEnergyData = [];
+
+          if (selectedunits == 1) {
+            if (type == 1) {
+              orbitalEnergyData = createRelativeOrbitalData(oeDataKj);
+            } else {
+              orbitalEnergyData = oeDataKj;
+            }
+          } else if (selectedunits == 2) {
+            if (type == 1) {
+              orbitalEnergyData = createRelativeOrbitalData(oeDataKcal);
+            } else {
+              orbitalEnergyData = oeDataKcal;
+            }
+          } else if (selectedunits == 3) {
+            if (type == 1) {
+              orbitalEnergyData = createRelativeOrbitalData(oeDataeV);
+            } else {
+              orbitalEnergyData = oeDataeV;
+            }
+          } else if (selectedunits == 4) {
+            if (type == 1) {
+              orbitalEnergyData = createRelativeOrbitalData(oeDataHartree);
+            } else {
+              orbitalEnergyData = oeDataHartree;
+            }
+          }
+
+          fillteredOrbitalEnergyData = filterbySelectedOrbitalList(orbitalEnergyData);
+          updateChart();
+        });
+
+        $(document).on('change', '#oetype', function() {
+          type = $('#oetype').val();
+          if (type == 1) {
+            orbitalEnergyData = createRelativeOrbitalData(orbitalEnergyData);
+          } else if (type == 2) {
+            orbitalEnergyData = [];
+            if (selectedunits == 1) {
+              orbitalEnergyData = oeDataKj;
+            } else if (selectedunits == 2) {
+              orbitalEnergyData = oeDataKcal;
+            } else if (selectedunits == 3) {
+              orbitalEnergyData = oeDataeV;
+            } else if (selectedunits == 4) {
+              orbitalEnergyData = oeDataHartree;
+            }
+          }
+
+          fillteredOrbitalEnergyData = filterbySelectedOrbitalList(orbitalEnergyData);
+          updateChart();
+        });
+
+        var randomColor = (function() {
+          var golden_ratio_conjugate = 0.618033988749895;
+          var h = Math.random();
+
+          var hslToRgb = function(h, s, l) {
+            var r, g, b;
+
+            if (s == 0) {
+              r = g = b = l; // achromatic
+            } else {
+              function hue2rgb(p, q, t) {
+                if (t < 0) t += 1;
+                if (t > 1) t -= 1;
+                if (t < 1 / 6) return p + (q - p) * 6 * t;
+                if (t < 1 / 2) return q;
+                if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+                return p;
+              }
+
+              var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+              var p = 2 * l - q;
+              r = hue2rgb(p, q, h + 1 / 3);
+              g = hue2rgb(p, q, h);
+              b = hue2rgb(p, q, h - 1 / 3);
+            }
+
+            return '#' + Math.round(r * 255).toString(16) + Math.round(g * 255).toString(16) + Math.round(b * 255).toString(16);
+          };
+
+          return function() {
+            h += golden_ratio_conjugate;
+            h %= 1;
+            return hslToRgb(h, 0.5, 0.60);
+          };
+        })();
+
+        createOrbitalCheckboxes();
+
+        $(document).on('click', '[type=checkbox]', function(e) {
+          console.log("hhhh chk");
+          if (this.checked) {
+            if (!($.inArray("" + $(this).attr("id"), selectedOrbitalList) > -1)) {
+              selectedOrbitalList.push($(this).attr("id"));
+            }
+          } else {
+            selectedOrbitalList = selectedOrbitalList.filter(k => k != $(this).attr("id"));
+          }
+          console.log(selectedOrbitalList);
+          fillteredOrbitalEnergyData = filterbySelectedOrbitalList(orbitalEnergyData);
+          updateChart();
+        })
+
+        function createOrbitalCheckboxes() {
+          var count;
+          if (data.totalorbitals % 2 == 0) {
+            count = data.totalorbitals / 2;
+          } else {
+            count = Math.floor(data.totalorbitals / 2) + 1;
+          }
+          for (i = 1; i <= count; i++) {
+            var newcheckbox;
+            if ((i == data.filledCount) || (i == parseInt(data.filledCount) + 1)) {
+              newcheckbox = $('<input type="checkbox" checked="checked" id="Orbital-' + i + '" /> <label>Orbital-' + i + ' </label> <br />');
+            } else {
+              newcheckbox = $('<input type="checkbox" id="Orbital-' + i + '" /> <label>Orbital-' + i + ' </label> <br />');
+            }
+
+            $('#checkboxesleft').append(newcheckbox);
+          }
+          for (i = count + 1; i <= data.totalorbitals; i++) {
+            var newcheckbox;
+            if ((i == data.filledCount) || (i == parseInt(data.filledCount) + 1)) {
+              newcheckbox = $('<input type="checkbox" checked="checked" id="Orbital-' + i + '" /> <label>Orbital-' + i + ' </label> <br />');
+            } else {
+              newcheckbox = $('<input type="checkbox" id="Orbital-' + i + '" /> <label>Orbital-' + i + ' </label> <br />');
+            }
+
+            $('#checkboxesright').append(newcheckbox);
+          }
+        }
+
+        function createOrbitalEnergyData(oedata, unitvalue) {
+          var evalues = [];
+          oAbsoluteData = [];
+          for (i = 0; i < oedata.length; i++) {
+            oAbsoluteData.push({
+              key: oedata[i].key,
+              values: []
+            })
+
+            for (j = 0; j < oedata[i].values.length; j++) {
+              oAbsoluteData[i].values.push({
+                x: oedata[i].values[j].x,
+                y: oedata[i].values[j].y * unitvalue
+              });
+            }
+
+          }
+          return oAbsoluteData;
+        }
+
+        function createRelativeOrbitalData(oedata) {
+          var evalues = [];
+          oRelativedata = [];
+          for (i = 0; i < oedata.length; i++) {
+            oRelativedata.push({
+              key: oedata[i].key,
+              values: []
+            })
+
+            for (j = 0; j < oedata[i].values.length; j++) {
+              var yvalue;
+              if (j == 0) {
+                yvalue = 0;
+              } else {
+                yvalue = oedata[i].values[j].y - oedata[i].values[j - 1].y;
+              }
+              oRelativedata[i].values.push({
+                x: oedata[i].values[j].x,
+                y: yvalue
+              });
+            }
+
+          }
+          return oRelativedata;
+        }
+
+        function filterbySelectedOrbitalList(oedata) {
+          var data = [];
+          selectedOrbitalList.forEach(function(d) {
+            index = oedata.findIndex(k => k.key == '' + d);
+            if (index != -1) {
+              data.push(oedata[index]);
+            }
+          })
+          return data;
+        }
+
+        function updateChart() {
+          var positionY = 50;
+          nv.addGraph(function() {
+             chart = nv.models.lineChart()
+              .color(randomColor)
+              .interpolate("linear")
+
+            if (guidelineEnabled == true) {
+              chart.useInteractiveGuideline(true);
+            } else {
+              chart.useInteractiveGuideline(false)
+            }
+
+            chart.showLabels(true);
+
+            chart.xAxis
+              .axisLabel('Structures')
+              .axisLabelDistance(30)
+              .tickFormat(d3.format(',r'))
+              //.ticks(data.increments + 1)
+
+            chart.lines.dispatch.on("elementClick", function(evt) {
+              console.log(evt);
+            });
+
+            chart.yAxis
+              .axisLabel('Orbital Energy')
+              .axisLabelDistance(50)
+              .tickPadding(10)
+              .tickFormat(d3.format(',.4f'));
+
+            setMinMaxEnergies();
+
+            chart.xDomain([0, data.increments * 10])
+              //chart.yDomain([data.minOrbitalEnergy - 0.1, data.maxOrbitalEnergy + .1])
+            chart.yDomain([minOEnergy - 0.11, maxOEnergy + 0.1]);
+
+            d3.select('#oechart svg')
+              .attr('perserveAspectRatio', 'xMinYMin')
+              .attr('width', width)
+              .attr('height', height)
+              .datum(fillteredOrbitalEnergyData);
+
+            setChartViewBox();
+            resizeChart();
+
+            nv.utils.windowResize(resizeChart);
+
+            function updateLegendPosition() {
+              d3.selectAll('.nv-legend .nv-series')[0].forEach(function(d) {
+                positionY += verticalOffset;
+                d3.select(d).attr('transform', 'translate(' + positionX + ',' + positionY + ')');
+              });
+
+              setMinMaxEnergies();
+            }
+            
+            
+            d3.select('.nv-legend').on("click", function() {
+              positionY = 50;
+              updateLegendPosition();
+              updateChart();
+            });
+
+            d3.select('.nv-legend').on("dblclick", function() {
+              positionY = 50;
+              updateLegendPosition();
+              updateChart();
+            });
+
+            updateLegendPosition();
+
+            function setChartViewBox() {
+              chart
+                .width(width - 100)
+                .height(height - 100);
+
+              d3.select('#oechart svg')
+                .attr('viewBox', '0 0 ' + width + ' ' + (height+100))
+                .transition().duration(500)
+                .call(chart);
+            }
+
+            function resizeChart() {
+              var container = d3.select('#oechart');
+              var svg = container.select('svg');
+
+              if (fitScreen) {
+                // resize based on container's width AND HEIGHT
+                var windowSize = nv.utils.windowSize();
+                svg.attr("width", windowSize.width);
+                svg.attr("height", windowSize.height);
+              } else {
+                // resize based on container's width
+                var aspect = chart.width() / chart.height();
+                var targetWidth = parseInt(container.style('width'));
+                svg.attr("width", targetWidth);
+                svg.attr("height", Math.round(targetWidth / aspect));
+              }
+            }
+            return chart;
+          });
+        }
+
+        updateChart();
+
+        $('.guidelinetoggle').click(function() {
+          $('.inactiveGuideView, .activeGuideView').toggle();
+          $('.guidelinetoggle').toggleClass('checked');
+          if ($('.guidelinetoggle').hasClass('checked')) {
+            guidelineEnabled = true;
+          } else {
+            guidelineEnabled = false;
+            console.log("false");
+          }
+           
+          updateChart();
+        });
+
+        function setMinMaxEnergies() {
+          var valueList = [];
+          var hasNegativeValues = false;
+
+          for (var i = 0; i < orbitalEnergyData.length; i++) {
+            // Only displayed should be considered
+            if (!orbitalEnergyData[i].disabled) {
+              orbitalEnergyData[i].values.forEach(function(d) {
+                if (d.y < 0) {
+                  hasNegativeValues = true;
+                }
+              })
+
+              if (hasNegativeValues) {
+                var tempVal = d3.min(orbitalEnergyData[i].values, function(d) {
+                  return d.y;
+                });
+                valueList.push(tempVal);
+                hasNegativeValues = 0;
+              } else {
+                var tempVal = d3.max(orbitalEnergyData[i].values, function(d) {
+                  return d.y;
+                });
+                valueList.push(tempVal);
+              }
+
+            }
+          }
+
+          minOEnergy = d3.min(valueList);
+          maxOEnergy = d3.max(valueList);
+        };
+      })
+    });
+  </script>
+
+</body>
+
+</html>

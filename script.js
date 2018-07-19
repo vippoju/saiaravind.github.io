@@ -62,6 +62,8 @@ $(document).ready(function () {
         });
     }
 
+    $("#project1").collapse('show');
+
 
 }); // document ready end 
 
