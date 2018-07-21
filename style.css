@@ -1578,6 +1578,11 @@ ul.cardli li:before{
     position: absolute;
 }
 
+.owl-stage{
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
 ul.cardli li span{
     color: #000;
 }
