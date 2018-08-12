@@ -13,7 +13,7 @@ $(document).ready(function () {
         }
     });
 
-     $("#experience-nav").click(function() {
+    /* $("#experience-nav").click(function() {
         $('html, body').animate({
           scrollTop: $("#experience").offset().top - 90
         }, 1000);
@@ -30,6 +30,7 @@ $(document).ready(function () {
           scrollTop: $("#contact").offset().top - 90
         }, 1000);
       });
+      */
 
       
 
