@@ -1285,6 +1285,7 @@ footer .footer .copyright a:hover{
     footer .footer .copyright{
         text-align: center;
     }
+    
 }
 
 @media (max-width: 991px) {
@@ -1442,9 +1443,10 @@ footer .footer .copyright a:hover{
 
     .social-icons{
         margin-right: 14px;
-        line-height: 67px;
+        line-height: 67px;        
+        padding-top:5px;
     }
-
+    
     .personalwork-content .namenprice .blog-title{
         width: 100%;
     }
@@ -1452,6 +1454,21 @@ footer .footer .copyright a:hover{
     .personalwork-content .namenprice .price{
         float: left !important;
         margin-top: 14px;
+    }
+
+
+}
+
+@media (max-width: 414px){
+    .social-icons{
+        margin-right: 14px;
+        line-height: 67px;
+        padding-top:5px;
+    }
+    
+    #right-menu
+    {
+        margin-top: -70px;
     }
 
 }
@@ -1714,6 +1731,10 @@ ul.cardli li span{
     max-width: 100%;
   }
   
+
+  .personalworks .row .col-xs-12{
+    padding-bottom: 15px;
+  }
 
 
 
